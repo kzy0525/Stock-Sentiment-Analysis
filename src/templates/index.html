@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reddit Stock Sentiment Analyzer</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .autocomplete-list {
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+        }
+        .autocomplete-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .autocomplete-item:hover {
+            background-color: #f0f0f0;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+        .post {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        .post-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .post-meta {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .post-text {
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+        .sentiment-summary {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .post.positive { border-left: 4px solid #28a745; }
+        .post.negative { border-left: 4px solid #dc3545; }
+        .post.neutral { border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <h1>Reddit Stock Sentiment Analyzer</h1>
+
+    <div class="form-group">
+        <form id="stockForm" autocomplete="off">
+            <input type="text" id="stockSymbol" placeholder="Search company or ticker..." required>
+            <div id="autocomplete-list" class="autocomplete-list"></div>
+            <button type="submit">Analyze</button>
+        </form>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        const input = document.getElementById('stockSymbol');
+        const autocompleteList = document.getElementById('autocomplete-list');
+
+        input.addEventListener('input', async () => {
+            const query = input.value.trim();
+            if (!query) {
+                autocompleteList.innerHTML = '';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/tickers?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                autocompleteList.innerHTML = '';
+
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'autocomplete-item';
+                    div.textContent = `${item.Symbol} - ${item.Name}`;
+                    div.addEventListener('click', () => {
+                        input.value = item.Symbol;
+                        autocompleteList.innerHTML = '';
+                    });
+                    autocompleteList.appendChild(div);
+                });
+
+            } catch (err) {
+                console.error('Autocomplete error:', err);
+                autocompleteList.innerHTML = '';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!autocompleteList.contains(e.target) && e.target !== input) {
+                autocompleteList.innerHTML = '';
+            }
+        });
+
+        document.getElementById('stockForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const stockSymbol = input.value.trim().split(' - ')[0];
+            input.value = stockSymbol;
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="loading">Analyzing... Please wait.</div>';
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `stock_symbol=${stockSymbol}`
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                    return;
+                }
+
+                let html = '<div class="success">';
+                html += `<h2>Analysis Results for ${data.stock_symbol}</h2>`;
+
+                if (data.sentiment.success) {
+                    html += '<div class="sentiment-summary">';
+                    html += '<h3>Sentiment Analysis</h3>';
+                    html += `<p>Average Sentiment: ${(data.sentiment.average_sentiment * 100).toFixed(1)}%</p>`;
+                    html += `<p>Total Posts Analyzed: ${data.sentiment.post_count}</p>`;
+                    html += '<p>Sentiment Distribution:</p><ul>';
+                    const dist = data.sentiment.sentiment_distribution;
+                    html += `<li>Positive: ${dist.positive || 0}</li>`;
+                    html += `<li>Neutral: ${dist.neutral || 0}</li>`;
+                    html += `<li>Negative: ${dist.negative || 0}</li>`;
+                    html += '</ul></div>';
+
+                    html += '<h3>Top Reddit Posts</h3>';
+                    data.sentiment.top_posts.forEach(post => {
+                        const sentimentClass = post.sentiment > 0 ? 'positive' : (post.sentiment < 0 ? 'negative' : 'neutral');
+                        html += `<div class="post ${sentimentClass}">`;
+                        html += `<div class="post-title"><a href="${post.url}" target="_blank">${post.title}</a></div>`;
+                        html += `<div class="post-meta">Posted in r/${post.subreddit} on ${post.created_utc}<br>`;
+                        html += `Score: ${post.score} | Sentiment: ${(post.sentiment * 100).toFixed(1)}%</div>`;
+                        if (post.text) html += `<div class="post-text">${post.text}</div>`;
+                        html += '</div>';
+                    });
+                } else {
+                    html += `<p class="error">${data.sentiment.error}</p>`;
+                }
+
+                if (data.stock_data.success) {
+                    const stock = data.stock_data.data;
+                    html += '<h3>Stock Data</h3>';
+                    html += `<p>Current Price: ${stock.currency}${stock.current_price?.toFixed(2) ?? "N/A"}</p>`;
+                    html += `<p>52-Week High: ${stock.fifty_two_week_high ?? "N/A"}</p>`;
+                    html += `<p>52-Week Low: ${stock.fifty_two_week_low ?? "N/A"}</p>`;
+                    html += `<p>Volume: ${stock.volume?.toLocaleString() ?? "N/A"}</p>`;
+                    html += `<p>Market Cap: ${stock.market_cap ? "$" + stock.market_cap.toLocaleString() : "N/A"}</p>`;
+                } else {
+                    html += `<p class="error">${data.stock_data.error}</p>`;
+                }
+
+                html += '</div>';
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -86,3 +86,5 @@ class RedditSentimentAnalyzer:
             'sentiment_distribution': sentiment_counts,
             'top_posts': top_posts
         } 
+    
+    

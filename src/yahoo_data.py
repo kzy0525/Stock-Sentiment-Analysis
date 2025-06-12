@@ -9,16 +9,24 @@ class StockDataFetcher:
                     time.sleep(retry_delay)
 
                 stock = yf.Ticker(stock_symbol)
-                current_price = stock.info.get('currentPrice')
+                hist = stock.history(period='1d')
 
-                if current_price is None:
-                    raise ValueError(f"Could not get current price for {stock_symbol}")
+                if hist.empty:
+                    raise ValueError(f"No historical data found for {stock_symbol}")
+
+                current_price = hist['Close'].iloc[-1]
+                fast_info = stock.fast_info  # Still okay for non-critical extras
 
                 return {
                     'success': True,
                     'data': {
+                        'name': stock_symbol,
                         'current_price': current_price,
-                        'currency': stock.info.get('currency', 'USD')
+                        'currency': fast_info.get('currency', 'USD'),
+                        'fifty_two_week_high': fast_info.get('year_high'),
+                        'fifty_two_week_low': fast_info.get('year_low'),
+                        'volume': fast_info.get('last_volume'),
+                        'market_cap': fast_info.get('market_cap', 'N/A')  # fallback if .info fails
                     }
                 }
 
