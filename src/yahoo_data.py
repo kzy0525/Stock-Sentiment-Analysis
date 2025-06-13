@@ -1,6 +1,18 @@
 import yfinance as yf
 import time
 
+def format_large_number(value):
+    if value is None:
+        return None
+    elif value >= 1_000_000_000_000:
+        return f"{value / 1_000_000_000_000:.2f}T"
+    elif value >= 1_000_000_000:
+        return f"{value / 1_000_000_000:.2f}B"
+    elif value >= 1_000_000:
+        return f"{value / 1_000_000:.2f}M"
+    else:
+        return f"{value:,}"  # e.g., 45,000
+
 class StockDataFetcher:
     def get_stock_data(self, stock_symbol, max_retries=3, retry_delay=5):
         for attempt in range(max_retries):
@@ -9,24 +21,35 @@ class StockDataFetcher:
                     time.sleep(retry_delay)
 
                 stock = yf.Ticker(stock_symbol)
-                hist = stock.history(period='1d')
 
-                if hist.empty:
-                    raise ValueError(f"No historical data found for {stock_symbol}")
+                # 1-day price for current
+                hist_1d = stock.history(period='1d')
+                if hist_1d.empty:
+                    raise ValueError(f"No recent price data for {stock_symbol}")
+                current_price = hist_1d['Close'].iloc[-1]
 
-                current_price = hist['Close'].iloc[-1]
-                fast_info = stock.fast_info  # Still okay for non-critical extras
+                # 1-year history for high/low/volume
+                hist_1y = stock.history(period='1y')
+                year_high = hist_1y['High'].max() if not hist_1y.empty else None
+                year_low = hist_1y['Low'].min() if not hist_1y.empty else None
+                last_volume = hist_1y['Volume'].iloc[-1] if not hist_1y.empty else None
+
+                # Try market cap from info
+                try:
+                    market_cap = stock.info.get('marketCap')
+                except:
+                    market_cap = None
 
                 return {
                     'success': True,
                     'data': {
                         'name': stock_symbol,
-                        'current_price': current_price,
-                        'currency': fast_info.get('currency', 'USD'),
-                        'fifty_two_week_high': fast_info.get('year_high'),
-                        'fifty_two_week_low': fast_info.get('year_low'),
-                        'volume': fast_info.get('last_volume'),
-                        'market_cap': fast_info.get('market_cap', 'N/A')  # fallback if .info fails
+                        'current_price': round(float(current_price), 2),
+                        'currency': 'USD',
+                        'fifty_two_week_high': round(float(year_high), 2) if year_high else None,
+                        'fifty_two_week_low': round(float(year_low), 2) if year_low else None,
+                        'volume': format_large_number(last_volume),
+                        'market_cap': format_large_number(market_cap)
                     }
                 }
 
