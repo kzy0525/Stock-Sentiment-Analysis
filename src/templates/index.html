@@ -7,16 +7,11 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
-      background-color: #1b1d1f;
+      background: linear-gradient(to bottom, #212121 0%, #3A3A3A 100%);
       color: #fff;
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #ccc;
     }
 
     .form-group {
@@ -24,6 +19,22 @@
       margin: 0 auto 20px auto;
       position: relative;
     }
+
+    #searchIcon {
+        color: #1F1F1F;   
+        width: 5000px;
+        height: 106px;           /* Icon color */
+        font-size: 20px;             /* Icon size */
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        }
+    #searchIcon:hover {
+        color: #ffffff;
+        }
+
 
     input[type="text"] {
       padding: 10px;
@@ -33,24 +44,9 @@
       font-size: 16px;
     }
 
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
     .autocomplete-list {
       position: absolute;
-      background-color: white;
+      background-color: #1F1F1F;
       width: 100%;
       max-height: 200px;
       overflow-y: auto;
@@ -76,7 +72,7 @@
     }
 
     .card {
-      background-color: #2a2d30;
+      background-color: #1F1F1F;
       border-radius: 16px;
       padding: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -116,6 +112,13 @@
     .post-title {
       font-size: 1rem;
       font-weight: bold;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .post-title a:hover {
+        text-decoration: underline;  
+        color: #7abaff;              
     }
 
     .post-meta {
@@ -127,16 +130,18 @@
     .post-text {
       margin-top: 10px;
       white-space: pre-wrap;
+      font-size: small;
     }
 
     .chart-placeholder {
-      height: 120px;
+      height: 355px;
+      width: 355px;
       background: #3a3d40;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #999;
+      color: #1F1F1F;
       margin-bottom: 20px;
     }
 
@@ -150,26 +155,37 @@
   </style>
 </head>
 <body>
-  <h1>🔍 Reddit Stock Sentiment Analyzer</h1>
 
   <div class="form-group">
     <form id="stockForm" autocomplete="off">
-      <input type="text" id="stockSymbol" placeholder="Search company or ticker..." required />
-      <div id="autocomplete-list" class="autocomplete-list"></div>
-      <button type="submit">Analyze</button>
+        <div style="position: relative;">
+        <input type="text" id="stockSymbol" placeholder="Search company or ticker..." required />
+        <span id="searchIcon" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer;">
+            🔍
+        </span>
+        </div>
+        <div id="autocomplete-list" class="autocomplete-list"></div>
     </form>
-  </div>
+    </div>
+
 
   <div id="results" class="dashboard">
     <!-- Left Panel -->
     <div id="left-panel" class="card">
       <!-- Sentiment & Stock data will be injected here -->
     </div>
-
+    
     <!-- Right Panel -->
-    <div>
-      <div class="card chart-placeholder">📊 Sentiment Frequency Distribution</div>
-      <div id="top-posts"></div>
+<div>
+    <div class="card chart-placeholder" id="plot-sentiment-trend">
+        📈 Sentiment Trend Over Time
+    </div>
+
+    <div class="card chart-placeholder" id="plot-volume-dist">
+        📊 Volume / Sentiment Distribution
+    </div>
+
+    <div id="top-posts"></div>
     </div>
   </div>
 
@@ -269,6 +285,14 @@
         leftPanel.innerHTML = html;
 
         // Top Reddit Posts
+        function truncateText(text, maxLength) {
+            const trimmed = text.trim();
+            if (trimmed.length <= maxLength) return trimmed;
+            const truncated = trimmed.slice(0, maxLength);
+            const lastSpace = truncated.lastIndexOf(" ");
+            return truncated.slice(0, lastSpace) + "...";
+        }
+
         if (data.sentiment.top_posts && data.sentiment.top_posts.length > 0) {
           data.sentiment.top_posts.forEach(post => {
             const sentimentClass = post.sentiment > 0 ? 'positive' : (post.sentiment < 0 ? 'negative' : 'neutral');
@@ -280,7 +304,7 @@
               <div class="post-title"><a href="${post.url}" target="_blank">${post.title}</a></div>
               <div class="post-meta">Posted in r/${post.subreddit} on ${post.created_utc}<br>
               Score: ${post.score} | Sentiment: ${(post.sentiment * 100).toFixed(1)}%</div>
-              ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
+              ${post.text ? `<div class="post-text">${truncateText(post.text, 200)} <a class="read-more" href="${post.url}" target="_blank">Read more →</a></div>` : ''}
             `;
 
             topPostsContainer.appendChild(postDiv);
@@ -292,6 +316,9 @@
       } catch (error) {
         leftPanel.innerHTML = `<div class="error">Error: ${error.message}</div>`;
       }
+    });
+    document.getElementById('searchIcon').addEventListener('click', () => {
+        document.getElementById('stockForm').requestSubmit();
     });
   </script>
 </body>
