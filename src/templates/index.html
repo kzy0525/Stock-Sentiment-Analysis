@@ -20,8 +20,8 @@
 
     .search-box {
     background-color: #1f1f1f;
-    width: 1300px;
-    height: 106px;
+    width: 1400px;
+    height: 50px;
     border-radius: 40px;
     padding: 10px 20px;
     display: flex;
@@ -37,7 +37,7 @@
 
     #stockSymbol {
     flex-grow: 1;
-    font-size: 18px;
+    font-size: 25px;
     background: transparent;
     border: none;
     color: #e0e0e0;
@@ -163,7 +163,7 @@
     .posts-column {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 0px;
         flex: 2;
     }
     .post a {
@@ -358,26 +358,32 @@
           html += `<p class="sentiment-info">Average Sentiment: ${(data.sentiment.average_sentiment * 100).toFixed(1)}%</p>`;
             html += `<p class="sentiment-info">Total Posts Analyzed: ${data.sentiment.post_count}</p>`;
 
-          const dist = data.sentiment.sentiment_distribution;
+        const dist = data.sentiment.sentiment_distribution || {};
+        const total = data.sentiment.post_count || 0;
+
+        const pos = dist.positive || 0;
+        const neu = dist.neutral || 0;
+        const neg = dist.negative || 0;
+
           html += `
             <div class="sentiment-bars">
                 <div class="sentiment-row">
                 <div class="bar-container">
-                    <div class="bar-fill positive" style="width: ${(dist.positive / data.sentiment.post_count) * 100}%"></div>
+                    <div class="bar-fill positive" style="width: ${total > 0 ? (pos / total) * 100 : 0}%"></div>
                 </div>
-                <span class="bar-label">Positive: ${dist.positive}</span>
-                </div>
-                <div class="sentiment-row">
-                <div class="bar-container">
-                    <div class="bar-fill neutral" style="width: ${(dist.neutral / data.sentiment.post_count) * 100}%"></div>
-                </div>
-                <span class="bar-label">Neutral: ${dist.neutral}</span>
+                <span class="bar-label">Positive: ${pos}</span>
                 </div>
                 <div class="sentiment-row">
                 <div class="bar-container">
-                    <div class="bar-fill negative" style="width: ${(dist.negative / data.sentiment.post_count) * 100}%"></div>
+                    <div class="bar-fill neutral" style="width: ${total > 0 ? (neu / total) * 100 : 0}%"></div>
                 </div>
-                <span class="bar-label">Negative: ${dist.negative}</span>
+                <span class="bar-label">Neutral: ${neu}</span>
+                </div>
+                <div class="sentiment-row">
+                <div class="bar-container">
+                    <div class="bar-fill negative" style="width: ${total > 0 ? (neg / total) * 100 : 0}%"></div>
+                </div>
+                <span class="bar-label">Negative: ${neg}</span>
                 </div>
             </div>
             `;
