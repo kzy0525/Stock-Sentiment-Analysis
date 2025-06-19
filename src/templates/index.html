@@ -15,50 +15,51 @@
     }
 
     .search-container {
-  max-width: 700px;
-  margin: 0 auto;
-}
+        margin: 0 auto;
+    }
 
-.search-box {
-  background-color: #1f1f1f;
-  border-radius: 40px;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  box-shadow: inset 0 0 0 2px #2c2c2c;
-}
+    .search-box {
+    background-color: #1f1f1f;
+    width: 1300px;
+    height: 106px;
+    border-radius: 40px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: inset 0 0 0 2px #2c2c2c;
+    }
 
-.search-icon {
-  color: #666;
-  font-size: 20px;
-  margin-right: 10px;
-}
+    .search-icon {
+    color: #666;
+    font-size: 20px;
+    margin-right: 10px;
+    }
 
-#stockSymbol {
-  flex-grow: 1;
-  font-size: 18px;
-  background: transparent;
-  border: none;
-  color: #e0e0e0;
-  outline: none;
-  width: 100%;
-}
+    #stockSymbol {
+    flex-grow: 1;
+    font-size: 18px;
+    background: transparent;
+    border: none;
+    color: #e0e0e0;
+    outline: none;
+    width: 100%;
+    }
 
-#stockSymbol::placeholder {
-  color: #555;
-}
+    #stockSymbol::placeholder {
+    color: #555;
+    }
 
-.autocomplete-list {
-  position: absolute;
-  background-color: #2a2a2a;
-  color: #fff;
-  width: 100%;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-}
+    .autocomplete-list {
+    position: absolute;
+    background-color: #2a2a2a;
+    color: #fff;
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    }
 
 
     input[type="text"] {
@@ -81,6 +82,8 @@
       border-radius: 16px;
       padding: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      width: 389px;
+      height: 600px;
     }
 
     .card h3 {
@@ -88,26 +91,99 @@
       margin-bottom: 10px;
     }
 
-    .sentiment-bar {
-      margin: 10px 0;
+    .sentiment-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 10px;
     }
 
-    .sentiment-bar div {
-      height: 10px;
-      margin: 5px 0;
-      border-radius: 4px;
+    .sentiment-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
 
-    .positive { background-color: #28a745; width: 70%; }
-    .neutral { background-color: #ffc107; width: 20%; }
-    .negative { background-color: #dc3545; width: 10%; }
+    .bar-container {
+        width: 180px;
+        height: 30px;
+        background-color: #6D6D6D;
+        border-radius: 999px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 999px 0 0 999px;
+    }
+
+    .bar-label {
+        font-weight: bold;
+        font-size: 20px;
+        white-space: nowrap;
+    }
+
+    .sentiment-info {
+        font-size: 20px;     /* Adjust as needed */
+        font-weight: bold;   /* or use 500/600/700 for specific weight */      /* Optional: to ensure contrast */
+        margin-bottom: 6px;  /* Optional: space between items */
+    }
+
+
+        /* Reuse your sentiment colors */
+    .bar-fill.positive { background-color: #4e9a5d; }
+    .bar-fill.neutral  { background-color: #b6a832; }
+    .bar-fill.negative { background-color: #b65252; }
+
+    .right-panel {
+        display: flex;
+        gap: 10px;
+    }
+
+    .charts-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex-shrink: 0;              /* Prevents shrinking */
+        width: 355px;                /* 👈 Locks the chart column width */
+    }
+
+    .chart-placeholder {
+        height: 280px;
+        width: 280px;
+        background: #1F1F1F;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1F1F1F;
+    }
+
+    .posts-column {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 2;
+    }
+    .post a {
+        color: inherit;           /* Inherits color from the surrounding .post-title */
+        text-decoration: none;    /* Removes underline */
+    }
+
+    .post a:hover {
+        color: #7abaff;           /* Optional: light blue on hover */
+        text-decoration: underline;  /* Optional: underline on hover only */
+    }
+
 
     .post {
       background-color: #1f2225;
-      margin: 15px 0;
+      margin: 5px 0;
       padding: 15px;
       border-left: 8px solid;
       border-radius: 12px;
+      width: 570px
     }
 
     .post.positive { border-color: #28a745; }
@@ -160,19 +236,6 @@
         text-decoration: underline;
     }
 
-
-    .chart-placeholder {
-      height: 355px;
-      width: 355px;
-      background: #3a3d40;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #1F1F1F;
-      margin-bottom: 20px;
-    }
-
     .loading, .error {
       text-align: center;
       margin-top: 20px;
@@ -202,24 +265,28 @@
 
 
   <div id="results" class="dashboard">
+
     <!-- Left Panel -->
     <div id="left-panel" class="card">
       <!-- Sentiment & Stock data will be injected here -->
     </div>
     
     <!-- Right Panel -->
-<div>
-    <div class="card chart-placeholder" id="plot-sentiment-trend">
-        📈 Sentiment Trend Over Time
+    <div class="right-panel">
+        <div class="charts-column">
+            <div class="card chart-placeholder" id="plot-sentiment-trend">
+            📈 Sentiment Trend Over Time
+            </div>
+            <div class="card chart-placeholder" id="plot-volume-dist">
+            📊 Volume / Sentiment Distribution
+            </div>
+        </div>
+
+        <div class="posts-column" id="top-posts">
+            <!-- Reddit posts will be inserted here -->
+        </div>
     </div>
 
-    <div class="card chart-placeholder" id="plot-volume-dist">
-        📊 Volume / Sentiment Distribution
-    </div>
-
-    <div id="top-posts"></div>
-    </div>
-  </div>
 
   <script>
     const input = document.getElementById('stockSymbol');
@@ -288,16 +355,33 @@
 
         let html = `<h3>Sentiment Analysis</h3>`;
         if (data.sentiment.success) {
-          html += `<p>Average Sentiment: ${(data.sentiment.average_sentiment * 100).toFixed(1)}%</p>`;
-          html += `<p>Total Posts Analyzed: ${data.sentiment.post_count}</p>`;
+          html += `<p class="sentiment-info">Average Sentiment: ${(data.sentiment.average_sentiment * 100).toFixed(1)}%</p>`;
+            html += `<p class="sentiment-info">Total Posts Analyzed: ${data.sentiment.post_count}</p>`;
+
           const dist = data.sentiment.sentiment_distribution;
           html += `
-            <div class="sentiment-bar">
-              <div class="positive" style="width: ${dist.positive / data.sentiment.post_count * 100}%"></div>
-              <div class="neutral" style="width: ${dist.neutral / data.sentiment.post_count * 100}%"></div>
-              <div class="negative" style="width: ${dist.negative / data.sentiment.post_count * 100}%"></div>
+            <div class="sentiment-bars">
+                <div class="sentiment-row">
+                <div class="bar-container">
+                    <div class="bar-fill positive" style="width: ${(dist.positive / data.sentiment.post_count) * 100}%"></div>
+                </div>
+                <span class="bar-label">Positive: ${dist.positive}</span>
+                </div>
+                <div class="sentiment-row">
+                <div class="bar-container">
+                    <div class="bar-fill neutral" style="width: ${(dist.neutral / data.sentiment.post_count) * 100}%"></div>
+                </div>
+                <span class="bar-label">Neutral: ${dist.neutral}</span>
+                </div>
+                <div class="sentiment-row">
+                <div class="bar-container">
+                    <div class="bar-fill negative" style="width: ${(dist.negative / data.sentiment.post_count) * 100}%"></div>
+                </div>
+                <span class="bar-label">Negative: ${dist.negative}</span>
+                </div>
             </div>
-          `;
+            `;
+
         } else {
           html += `<p class="error">${data.sentiment.error}</p>`;
         }
