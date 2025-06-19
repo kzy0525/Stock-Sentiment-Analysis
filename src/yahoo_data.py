@@ -1,5 +1,6 @@
 import yfinance as yf
 import time
+import pandas as pd
 
 def format_large_number(value):
     if value is None:
@@ -60,3 +61,12 @@ class StockDataFetcher:
                         'success': False,
                         'error': f"Failed to fetch stock data for {stock_symbol} after {max_retries} attempts: {str(e)}"
                     }
+                
+    
+    def get_stock_dataframe(self, stock_symbol, period="6mo", interval="1d"):
+        """Fetch historical stock data as a DataFrame for plotting"""
+        ticker = yf.Ticker(stock_symbol)
+        hist = ticker.history(period=period, interval=interval)
+        if hist.empty:
+            raise ValueError(f"No stock data found for {stock_symbol}")
+        return hist

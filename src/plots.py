@@ -8,7 +8,7 @@ import os
 
 class SentimentPlotter:
     def __init__(self):
-        plt.style.use('seaborn')
+        plt.style.use('seaborn-v0_8-darkgrid')
         self.figsize = (12, 8)
     
     def plot_stock_price(self, stock_data, title="Stock Price Chart"):
