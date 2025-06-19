@@ -77,7 +77,7 @@ class RedditSentimentAnalyzer:
         sentiment_counts = posts_df['sentiment_category'].value_counts().to_dict()
         
 
-        top_posts = posts_df.nlargest(5, 'score').to_dict('records')
+        top_posts = posts_df.nlargest(4, 'score').to_dict('records')
         
         return {
             'success': True,
