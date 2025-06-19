@@ -19,30 +19,30 @@
     }
 
     .search-box {
-    background-color: #1f1f1f;
-    width: 1340px;
-    height: 50px;
-    border-radius: 20px;
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    box-shadow: inset 0 0 0 2px #2c2c2c;
+        background-color: #1f1f1f;
+        width: 1340px;
+        height: 50px;
+        border-radius: 20px;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        box-shadow: inset 0 0 0 2px #2c2c2c;
     }
 
     .search-icon {
-    color: #666;
-    font-size: 20px;
-    margin-right: 10px;
+        color: #666;
+        font-size: 20px;
+        margin-right: 10px;
     }
 
     #stockSymbol {
-    flex-grow: 1;
-    font-size: 25px;
-    background: transparent;
-    border: none;
-    color: #e0e0e0;
-    outline: none;
-    width: 100%;
+        flex-grow: 1;
+        font-size: 25px;
+        background: transparent;
+        border: none;
+        color: #e0e0e0;
+        outline: none;
+        width: 100%;
     }
 
     #stockSymbol::placeholder {
@@ -50,15 +50,15 @@
     }
 
     .autocomplete-list {
-    position: absolute;
-    background-color: #2a2a2a;
-    color: #fff;
-    width: 100%;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
+        position: absolute;
+        background-color: #2a2a2a;
+        color: #fff;
+        width: 100%;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
     }
 
 
@@ -85,6 +85,64 @@
       width: 389px;
       height: 600px;
     }
+
+    .section-title {
+        text-align: center;
+        font-size: 25px;
+        font-weight: bold;
+        color: #498659;  /* Feel free to change to #ffffff or another tone */
+        margin-top: 28px;
+        margin-bottom: 15px;
+    }
+
+    .stock-data {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .stock-current {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .stock-current .label {
+        color: #ccc;
+        font-size: 14px;
+        margin-bottom: 4px;
+        align-items: center;
+    }
+
+    .stock-current .value {
+        font-size: 28px;
+        font-weight: bold;
+        color: white;
+         align-items: center;
+    }
+
+    .stock-grid {
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        gap: 16px 50px;
+        align-items: center;
+    }
+
+    .stock-grid .label {
+        display: block;
+        color: #aaa;
+        font-size: 14px;
+        align-items: center;
+    }
+
+    .stock-grid .value {
+        display: block;
+        font-weight: bold;
+        font-size: 20px;
+        color: white;
+        align-items: center;
+    }
+
 
     .card h3 {
       color: #7aff9c;
@@ -132,7 +190,7 @@
 
 
         /* Reuse your sentiment colors */
-    .bar-fill.positive { background-color: #4e9a5d; }
+    .bar-fill.positive { background-color: #498659; }
     .bar-fill.neutral  { background-color: #b6a832; }
     .bar-fill.negative { background-color: #b65252; }
 
@@ -185,7 +243,7 @@
       width: 570px
     }
 
-    .post.positive { border-color: #28a745; }
+    .post.positive { border-color: #498659; }
     .post.neutral { border-color: #ffc107; }
     .post.negative { border-color: #dc3545; }
 
@@ -214,7 +272,8 @@
     }
     .post-text {
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -352,7 +411,7 @@
           return;
         }
 
-        let html = `<h3>Sentiment Analysis</h3>`;
+        let html = `<h3 class="section-title">Sentiment Analysis</h3>`;
         if (data.sentiment.success) {
           html += `<p class="sentiment-info">Average Sentiment: ${(data.sentiment.average_sentiment * 100).toFixed(1)}%</p>`;
             html += `<p class="sentiment-info">Total Posts Analyzed: ${data.sentiment.post_count}</p>`;
@@ -391,19 +450,42 @@
           html += `<p class="error">${data.sentiment.error}</p>`;
         }
 
-        html += `<h3>Stock Data</h3>`;
+        // Stock Data section
+
         if (data.stock_data.success) {
-          const stock = data.stock_data.data;
-          html += `<p>Current Price: $${stock.current_price?.toFixed(2) ?? "N/A"}</p>`;
-          html += `<p>52-Week High: $${stock.fifty_two_week_high ?? "N/A"}</p>`;
-          html += `<p>52-Week Low: $${stock.fifty_two_week_low ?? "N/A"}</p>`;
-          html += `<p>Volume: ${stock.volume?.toLocaleString() ?? "N/A"}</p>`;
-          html += `<p>Market Cap: $${stock.market_cap?.toLocaleString() ?? "N/A"}</p>`;
-        } else {
-          html += `<p class="error">${data.stock_data.error}</p>`;
+            const stock = data.stock_data.data;
+
+            html += `
+                <h3 class="section-title">Stock Data</h3>
+                <div class="stock-data">
+                <div class="stock-current">
+                    <div class="label">Current Price</div>
+                    <div class="value">$${stock.current_price?.toFixed(2) ?? "N/A"}</div>
+                </div>
+                <div class="stock-grid">
+                    <div><span class="label">52-Week Low</span><span class="value">$${stock.fifty_two_week_low ?? "N/A"}</span></div>
+                    <div><span class="label">52-Week High</span><span class="value">$${stock.fifty_two_week_high ?? "N/A"}</span></div>
+                    <div><span class="label">Volume</span><span class="value">${stock.volume?.toLocaleString() ?? "N/A"}</span></div>
+                    <div><span class="label">Market Cap</span><span class="value">${stock.market_cap?.toLocaleString() ?? "N/A"}</span></div>
+                    <div><span class="label">P/E Ratio</span><span class="value">${stock.pe_ratio ?? "N/A"}</span></div>
+                    <div><span class="label">Dividend Yield</span><span class="value">${stock.dividend_yield ?? "N/A"}%</span></div>
+                </div>
+                </div>
+            `;
+            } else {
+            html += `<p class="error">${data.stock_data.error}</p>`;
         }
 
         leftPanel.innerHTML = html;
+
+        // ✅ Inject plot images into the placeholder divs
+        document.getElementById('plot-sentiment-trend').innerHTML = `
+            <img src='/${data.stock_plot}' style='width: 100%; height: 100%; border-radius: 20px;' alt="Stock Price Chart">
+        `;
+
+        document.getElementById('plot-volume-dist').innerHTML = `
+            <img src='/${data.sentiment_plot}' style='width: 100%; height: 100%; border-radius: 20px;' alt="Sentiment Distribution">
+        `;
 
         // Top Reddit Posts
 
