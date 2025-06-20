@@ -21,7 +21,7 @@
     .search-box {
         background-color: #1f1f1f;
         width: 1390px;
-        height: 50px;
+        height: 60px;
         border-radius: 25px;
         padding: 10px 20px;
         display: flex;
@@ -59,6 +59,7 @@
         max-height: 200px;
         overflow-y: auto;
         z-index: 1000;
+        padding: 10px;
     }
 
 
@@ -72,8 +73,8 @@
 
     .dashboard {
       display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 20px;
+      grid-template-columns: 1fr 3fr;
+      gap: 5px;
       margin-top: 20px;
     }
 
@@ -82,8 +83,8 @@
       border-radius: 25px;
       padding: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      width: 389px;
-      height: 600px;
+      width: 350px;
+      height: 680px;
       margin: 0;
       padding: 20px;
     }
@@ -166,7 +167,7 @@
     }
 
     .bar-container {
-        width: 220px;
+        width: 190px;
         height: 20px;
         background-color: #6D6D6D;
         border-radius: 999px;
@@ -197,32 +198,33 @@
 
     .right-panel {
         display: flex;
-        gap: 20px;
+        gap: 5px;
     }
 
     .charts-column {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 20px;
         flex-shrink: 0;              /* Prevents shrinking */
-        width: 320px;                /* 👈 Locks the chart column width */
+        width: 311px;                /* 👈 Locks the chart column width */
     }
 
     .chart-placeholder {
-        height: 280px;
-        width: 280px;
+        height: 311px;
+        width: 311px;
         background: #1F1F1F;
         border-radius: 25px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #1F1F1F;
+        margin-left: 18px;
     }
 
     .posts-column {
         display: flex;
         flex-direction: column;
-        gap: 0px;
+        gap: 10px;
         flex: 1;
     }
     .post a {
@@ -237,7 +239,8 @@
 
     .post {
       background-color: #1F1F1F;
-      margin: 6% 0;
+      margin-left: 75px;
+      margin-bottom: 12px;
       padding: 15px;
       border-left: 12px solid;
       border-radius: 12px;
@@ -272,8 +275,8 @@
     }
     .post-text {
         display: -webkit-box;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
