@@ -45,7 +45,16 @@ def analyze():
         sentiment_fig = plotter.plot_sentiment_distribution(sentiment_data.get("sentiment_scores", []))
         plotter.save_plot(sentiment_fig, sentiment_plot_path)
 
-        stock_fig = plotter.plot_stock_price(stock_data.get("data", pd.DataFrame()))
+        # Convert stock_data["data"] (a dict) to a proper DataFrame
+        raw_stock_dict = stock_data.get("data", {})
+        stock_df = pd.DataFrame.from_dict(raw_stock_dict)
+
+        # Optional: make sure index is datetime if plotting over time
+        if not stock_df.empty:
+            stock_df.index = pd.to_datetime(stock_df.index, errors='coerce')
+
+        stock_fig = plotter.plot_stock_price(stock_df)
+
         plotter.save_plot(stock_fig, stock_plot_path)
 
         return jsonify({

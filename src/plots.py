@@ -16,17 +16,36 @@ class SentimentPlotter:
         if stock_data is None or stock_data.empty or 'Close' not in stock_data.columns:
             fig, ax = plt.subplots(figsize=self.figsize)
             ax.text(0.5, 0.5, 'No stock data available',
-                    horizontalalignment='center', verticalalignment='center')
-            plt.title(title)
+                    horizontalalignment='center', verticalalignment='center', color='white')
+            ax.set_facecolor("#121212")
+            fig.patch.set_facecolor("#121212")
             return fig
-        
+
         fig, ax = plt.subplots(figsize=self.figsize)
-        ax.plot(stock_data.index, stock_data['Close'], color='green')
-        ax.set_title(title)
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Price (USD)")
-        ax.grid(True)
+        
+        # Clean dark theme
+        ax.set_facecolor("#121212")
+        fig.patch.set_facecolor("#121212")
+        ax.plot(stock_data.index, stock_data["Close"], color="#00ffae", linewidth=2)
+
+        # Remove spines
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+
+        # Customize grid
+        ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.2, color='white')
+
+        # Remove y-axis ticks & lighten x-axis
+        ax.tick_params(axis='y', colors='white')
+        ax.tick_params(axis='x', colors='white')
+
+        # Optional: remove axis labels or title for cleaner look
+        ax.set_title("", color='white')
+        ax.set_xlabel("")
+        ax.set_ylabel("")
+
         return fig
+
 
     
     # def plot_sentiment_trend(self, sentiment_data, stock_data=None, title="Sentiment Analysis"):
