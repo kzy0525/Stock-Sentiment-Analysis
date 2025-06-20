@@ -1,5 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.use('Agg') 
 import seaborn as sns
 import pandas as pd
 from datetime import datetime, timedelta

@@ -30,9 +30,11 @@
     }
 
     .search-icon {
-        color: #666;
-        font-size: 20px;
+        color: #555;
         margin-right: 10px;
+        width: 24px;     /* Adjust size as needed */
+        height: 24px;
+
     }
 
     #stockSymbol {
@@ -88,6 +90,7 @@
       grid-template-columns: 1fr 3fr;
       gap: 5px;
       margin-top: 20px;
+      align-items: stretch;
     }
 
     .card {
@@ -177,9 +180,9 @@
     .sentiment-bars {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 20px;
         margin-top: 15px;
-        margin-right: 40px;
+        margin-left: 30px;
     }
 
     .sentiment-row {
@@ -190,7 +193,7 @@
 
     .bar-container {
         width: 190px;
-        height: 20px;
+        height: 21px;
         background-color: #6D6D6D;
         border-radius: 999px;
         overflow: hidden;
@@ -211,7 +214,7 @@
     .sentiment-info {
         font-size: 18px;  
         font-weight: semi-bold;
-        margin-bottom: 15px;  
+        margin-bottom: 20px;  
         align-items: center;
         text-align: center;   
     }
@@ -229,14 +232,15 @@
     .right-panel {
         display: flex;
         gap: 5px;
+        align-items: stretch;
     }
 
     .charts-column {
         display: flex;
         flex-direction: column;
         gap: 20px;
-        flex-shrink: 0;              /* Prevents shrinking */
-        width: 300px;                /* 👈 Locks the chart column width */
+        flex-shrink: 0;          
+        width: 300px;            
     }
 
     .chart-placeholder {
@@ -343,7 +347,9 @@
   <div class="search-container">
     <form id="stockForm" autocomplete="off">
         <div class="search-box">
-        <span class="search-icon">🔍</span>
+        <img class="search-icon" src="{{ url_for('static', filename='Vector.png') }}" alt="Search Icon">
+
+
         <input
             type="text"
             id="stockSymbol"
@@ -404,7 +410,7 @@
           div.addEventListener('click', () => {
             input.value = item.Symbol;
             autocompleteList.innerHTML = '';
-            document.getElementById('stockForm').requestSubmit();  // ✅ auto-submit form
+            document.getElementById('stockForm').requestSubmit(); 
         });
           autocompleteList.appendChild(div);
         });
