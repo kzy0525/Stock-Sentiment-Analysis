@@ -7,7 +7,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
-      background: linear-gradient(to Right, #212121 0%, #3A3A3A 100%);
+      background: linear-gradient(to Bottom Right, #212121 0%, #3A3A3A 100%);
       color: #fff;
       font-family: Arial, sans-serif;
       margin: 0;
@@ -84,6 +84,8 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       width: 389px;
       height: 600px;
+      margin: 0;
+      padding: 20px;
     }
 
     .section-title {
@@ -91,7 +93,7 @@
         font-size: 25px;
         font-weight: bold;
         color: #498659;  /* Feel free to change to #ffffff or another tone */
-        margin-top: 28px;
+        margin-top: 30px;
         margin-bottom: 15px;
     }
 
@@ -109,7 +111,7 @@
 
     .stock-current .label {
         color: #ccc;
-        font-size: 14px;
+        font-size: 12px;
         margin-bottom: 4px;
         align-items: center;
     }
@@ -118,27 +120,28 @@
         font-size: 28px;
         font-weight: bold;
         color: white;
-         align-items: center;
+        align-items: center;
     }
 
     .stock-grid {
         display: grid;
         grid-template-columns: repeat(2, auto);
-        gap: 16px 50px;
+        gap: 25px 50px;
         align-items: center;
+        text-align: center;    
     }
 
     .stock-grid .label {
         display: block;
         color: #aaa;
-        font-size: 14px;
+        font-size: 12px;
         align-items: center;
     }
 
     .stock-grid .value {
         display: block;
         font-weight: bold;
-        font-size: 20px;
+        font-size: 28px;
         color: white;
         align-items: center;
     }
@@ -188,15 +191,13 @@
         margin-bottom: 6px;  /* Optional: space between items */
     }
 
-
-        /* Reuse your sentiment colors */
     .bar-fill.positive { background-color: #498659; }
     .bar-fill.neutral  { background-color: #b6a832; }
     .bar-fill.negative { background-color: #b65252; }
 
     .right-panel {
         display: flex;
-        gap: 10px;
+        gap: 20px;
     }
 
     .charts-column {
@@ -204,7 +205,7 @@
         flex-direction: column;
         gap: 10px;
         flex-shrink: 0;              /* Prevents shrinking */
-        width: 355px;                /* 👈 Locks the chart column width */
+        width: 320px;                /* 👈 Locks the chart column width */
     }
 
     .chart-placeholder {
@@ -222,7 +223,7 @@
         display: flex;
         flex-direction: column;
         gap: 0px;
-        flex: 2;
+        flex: 1;
     }
     .post a {
         color: inherit;           /* Inherits color from the surrounding .post-title */
@@ -236,11 +237,10 @@
 
     .post {
       background-color: #1F1F1F;
-      margin: 5px 0;
+      margin: 6% 0;
       padding: 15px;
       border-left: 12px solid;
       border-radius: 12px;
-      width: 570px
     }
 
     .post.positive { border-color: #498659; }
@@ -272,8 +272,8 @@
     }
     .post-text {
         display: -webkit-box;
-        -webkit-line-clamp: 4;
-        line-clamp: 4;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
