@@ -59,8 +59,20 @@
         max-height: 200px;
         overflow-y: auto;
         z-index: 1000;
-        padding: 10px;
     }
+
+    .autocomplete-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        border-bottom: 1px;
+        font-size: 16px;
+        transition: background-color 0.2s;
+    }
+
+    .autocomplete-item:hover {
+        background-color: #3a3a3a;
+    }
+
 
 
     input[type="text"] {
@@ -84,17 +96,26 @@
       padding: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       width: 350px;
-      height: 680px;
+      height: 660px;
       margin: 0;
       padding: 20px;
     }
 
-    .section-title {
+    .sentiment-title {
         text-align: center;
-        font-size: 25px;
+        font-size: 30px;
         font-weight: bold;
-        color: #498659;  /* Feel free to change to #ffffff or another tone */
-        margin-top: 30px;
+        color: #28733B;  /* Feel free to change to #ffffff or another tone */
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .stock-title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: #28733B;  /* Feel free to change to #ffffff or another tone */
+        margin-top: 65px;
         margin-bottom: 15px;
     }
 
@@ -157,7 +178,8 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
-        margin-top: 10px;
+        margin-top: 15px;
+        margin-right: 40px;
     }
 
     .sentiment-row {
@@ -181,20 +203,28 @@
     }
 
     .bar-label {
-        font-weight: bold;
-        font-size: 20px;
+        font-weight: semi-bold;
+        font-size: 15px;
         white-space: nowrap;
     }
 
     .sentiment-info {
-        font-size: 20px;     /* Adjust as needed */
-        font-weight: bold;   /* or use 500/600/700 for specific weight */      /* Optional: to ensure contrast */
-        margin-bottom: 6px;  /* Optional: space between items */
+        font-size: 18px;  
+        font-weight: semi-bold;
+        margin-bottom: 15px;  
+        align-items: center;
+        text-align: center;   
     }
 
-    .bar-fill.positive { background-color: #498659; }
-    .bar-fill.neutral  { background-color: #b6a832; }
-    .bar-fill.negative { background-color: #b65252; }
+    .bar-fill.positive { 
+        background-color: #498659; 
+    }
+    .bar-fill.neutral  { 
+        background-color: #b6a832; 
+    }
+    .bar-fill.negative { 
+        background-color: #b65252; 
+    }
 
     .right-panel {
         display: flex;
@@ -206,12 +236,12 @@
         flex-direction: column;
         gap: 20px;
         flex-shrink: 0;              /* Prevents shrinking */
-        width: 311px;                /* 👈 Locks the chart column width */
+        width: 300px;                /* 👈 Locks the chart column width */
     }
 
     .chart-placeholder {
-        height: 311px;
-        width: 311px;
+        height: 300px;
+        width: 300px;
         background: #1F1F1F;
         border-radius: 25px;
         display: flex;
@@ -219,6 +249,7 @@
         justify-content: center;
         color: #1F1F1F;
         margin-left: 18px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
     .posts-column {
@@ -244,6 +275,7 @@
       padding: 15px;
       border-left: 12px solid;
       border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
     .post.positive { border-color: #498659; }
@@ -259,7 +291,7 @@
 
     .post-title a:hover {
         text-decoration: underline;  
-        color: #7abaff;              
+        color: #6D6D6D;              
     }
 
     .post-meta {
@@ -275,8 +307,8 @@
     }
     .post-text {
         display: -webkit-box;
-        -webkit-line-clamp: 4;
-        line-clamp: 4;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -372,7 +404,8 @@
           div.addEventListener('click', () => {
             input.value = item.Symbol;
             autocompleteList.innerHTML = '';
-          });
+            document.getElementById('stockForm').requestSubmit();  // ✅ auto-submit form
+        });
           autocompleteList.appendChild(div);
         });
       } catch (err) {
@@ -414,7 +447,7 @@
           return;
         }
 
-        let html = `<h3 class="section-title">Sentiment Analysis</h3>`;
+        let html = `<h3 class="sentiment-title">Sentiment Analysis</h3>`;
         if (data.sentiment.success) {
           html += `<p class="sentiment-info">Average Sentiment: ${(data.sentiment.average_sentiment * 100).toFixed(1)}%</p>`;
             html += `<p class="sentiment-info">Total Posts Analyzed: ${data.sentiment.post_count}</p>`;
@@ -459,7 +492,7 @@
             const stock = data.stock_data.data;
 
             html += `
-                <h3 class="section-title">Stock Data</h3>
+                <h3 class="stock-title">Stock Data</h3>
                 <div class="stock-data">
                 <div class="stock-current">
                     <div class="label">Current Price</div>
