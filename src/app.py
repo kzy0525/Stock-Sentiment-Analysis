@@ -15,7 +15,7 @@ ticker_df = pd.read_csv(os.path.join('datasets', 'tickers.csv'))
 ticker_df.dropna(subset=['Symbol', 'Name'], inplace=True)
 
 # Explicitly set the templates folder
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates', static_folder='../static')
 
 # Initialize analyzers
 sentiment_analyzer = RedditSentimentAnalyzer()
@@ -39,30 +39,27 @@ def analyze():
         stock_data = stock_fetcher.get_stock_data(stock_symbol)
         print(f"✅ Stock data keys: {stock_data.keys()}")
 
-        sentiment_plot_path = f"static/plots/{uuid.uuid4().hex}_sentiment.png"
-        stock_plot_path = f"static/plots/{uuid.uuid4().hex}_stock.png"
-
+        # Step 1: Generate plot figures
         sentiment_fig = plotter.plot_sentiment_distribution(sentiment_data.get("sentiment_scores", []))
-        plotter.save_plot(sentiment_fig, sentiment_plot_path)
-
-        # Convert stock_data["data"] (a dict) to a proper DataFrame
-        raw_stock_dict = stock_data.get("data", {})
-        stock_df = pd.DataFrame.from_dict(raw_stock_dict)
-
-        # Optional: make sure index is datetime if plotting over time
-        if not stock_df.empty:
-            stock_df.index = pd.to_datetime(stock_df.index, errors='coerce')
-
+        stock_df = stock_fetcher.get_stock_dataframe(stock_symbol, period="1y", interval="1d")
         stock_fig = plotter.plot_stock_price(stock_df)
 
-        plotter.save_plot(stock_fig, stock_plot_path)
+        # Step 2: Build both absolute and relative paths for saving
+        relative_sentiment_path = f"static/plots/{uuid.uuid4().hex}_sentiment.png"
+        absolute_sentiment_path = os.path.join(os.getcwd(), relative_sentiment_path)
+        plotter.save_plot(sentiment_fig, absolute_sentiment_path)
 
+        relative_stock_path = f"static/plots/{uuid.uuid4().hex}_stock.png"
+        absolute_stock_path = os.path.join(os.getcwd(), relative_stock_path)
+        plotter.save_plot(stock_fig, absolute_stock_path)
+
+        # Step 3: Return with proper browser-accessible paths
         return jsonify({
             'stock_symbol': stock_symbol,
             'sentiment': sentiment_data,
             'stock_data': stock_data,
-            'sentiment_plot': sentiment_plot_path,
-            'stock_plot': stock_plot_path
+            'sentiment_plot': '/' + relative_sentiment_path,
+            'stock_plot': '/' + relative_stock_path
         })
     except Exception as e:
         print(f"❌ Error: {e}")

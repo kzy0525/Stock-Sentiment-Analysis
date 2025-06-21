@@ -520,13 +520,12 @@
 
         leftPanel.innerHTML = html;
 
-        // ✅ Inject plot images into the placeholder divs
         document.getElementById('plot-sentiment-trend').innerHTML = `
-            <img src='/${data.stock_plot}' style='width: 100%; height: 100%; border-radius: 20px;' alt="Stock Price Chart">
+            <img src='${data.stock_plot}' style='width: 100%; height: 100%; border-radius: 20px;' alt="Stock Price Chart">
         `;
 
         document.getElementById('plot-volume-dist').innerHTML = `
-            <img src='/${data.sentiment_plot}' style='width: 100%; height: 100%; border-radius: 20px;' alt="Sentiment Distribution">
+            <img src='${data.sentiment_plot}' style='width: 100%; height: 100%; border-radius: 20px;' alt="Sentiment Distribution">
         `;
 
         // Top Reddit Posts
