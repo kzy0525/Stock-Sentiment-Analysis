@@ -5,6 +5,8 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 import os
+from matplotlib.ticker import FuncFormatter
+
 
 class SentimentPlotter:
     def __init__(self):
@@ -37,9 +39,13 @@ class SentimentPlotter:
         ax.set_title("", color='white')
 
         ax.set_xticklabels([])
-        ax.set_title("")
-        ax.set_xlabel('1 Year Data', color='white', fontsize=14, labelpad=15)
-        ax.set_ylabel('Price (USD)', color='white', fontsize=14, labelpad=15)
+        ax.set_title("1 Year Pricing Data", color='white', pad=20, fontsize=25, fontweight='bold')
+        # ax.set_xlabel('1 Year Data', color='white', fontsize=14, labelpad=40)
+        # ax.set_ylabel('Price (USD)', color='white', fontsize=14, labelpad=40)
+        fig.tight_layout(pad=2)  
+        fig.subplots_adjust(top=0.80)  
+
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f'${x:,.0f}'))
 
         return fig
 
@@ -60,11 +66,12 @@ class SentimentPlotter:
         ax.spines[['top', 'right']].set_visible(False)
         ax.grid(True, linestyle='--', linewidth=0.8, alpha=0.2, color='white')
 
-        ax.set_title("", color='white')
-        ax.set_xlabel('Sentiment Score', color='white', fontsize=14, labelpad=15)
-        ax.set_ylabel('Score Frequency', color='white', fontsize=14, labelpad=15)
+        ax.set_title("Sentiment Scores and Score Frequency", color='white', pad=20, fontsize=25, fontweight='bold')
+        # ax.set_xlabel('Sentiment Score', color='white', fontsize=14, labelpad=40)
+        # ax.set_ylabel('Score Frequency', color='white', fontsize=14, labelpad=40)
 
-        
+        fig.tight_layout(pad=2)  
+        fig.subplots_adjust(top=0.80) 
         return fig
 
     def save_plot(self, fig, relative_path):

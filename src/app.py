@@ -7,6 +7,8 @@ from yahoo_data import StockDataFetcher
 from plots import SentimentPlotter
 import uuid  
 import re
+import glob
+
 
 
 # Load environment variables
@@ -39,6 +41,10 @@ def index():
 @app.route('/analyze', methods=['POST'])
 def analyze():
     try:
+        plot_folder = os.path.join('static', 'plots')
+        for file in glob.glob(os.path.join(plot_folder, '*.png')):
+            os.remove(file)
+
         stock_symbol = request.form.get('stock_symbol', '').upper()
         print(f"Received symbol: {stock_symbol}")
 
