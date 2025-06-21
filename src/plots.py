@@ -39,6 +39,7 @@ class SentimentPlotter:
         ax.set_title("", color='white')
 
         ax.set_xticklabels([])
+        ax.tick_params(axis='y', pad=5) 
         ax.set_title("1 Year Pricing Data", color='white', pad=20, fontsize=25, fontweight='bold')
         # ax.set_xlabel('1 Year Data', color='white', fontsize=14, labelpad=40)
         # ax.set_ylabel('Price (USD)', color='white', fontsize=14, labelpad=40)
@@ -62,6 +63,8 @@ class SentimentPlotter:
             ax.text(0.5, 0.5, 'No sentiment data available',
                     ha='center', va='center', color='white', fontsize=14)
 
+        ax.set_yticklabels([])
+        ax.tick_params(axis='x', pad=5)
         ax.tick_params(axis='both', colors='white', labelsize=12)  # larger ticks
         ax.spines[['top', 'right']].set_visible(False)
         ax.grid(True, linestyle='--', linewidth=0.8, alpha=0.2, color='white')
