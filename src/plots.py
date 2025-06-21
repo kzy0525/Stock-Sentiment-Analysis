@@ -19,6 +19,14 @@ class SentimentPlotter:
                     ha='center', va='center', color='white', fontsize=14)
         else:
             ax.plot(stock_data.index, stock_data["Close"], color="#498659", linewidth=4)
+            ax.fill_between(stock_data.index, stock_data["Close"], 
+                        color="#498659", alpha=0.1, zorder=1)
+            
+            mean_price = stock_data["Close"].mean()
+            price_range = stock_data["Close"].max() - stock_data["Close"].min()
+            padding = price_range * 0.6
+            ax.set_ylim(mean_price - padding, mean_price + padding)
+
 
         # Styling
         ax.set_facecolor("#1F1F1F")
@@ -27,6 +35,10 @@ class SentimentPlotter:
         ax.spines[['top', 'right']].set_visible(False)
         ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.2, color='white')
         ax.set_title("", color='white')
+
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.set_title("")
         ax.set_xlabel("")
         ax.set_ylabel("")
 
@@ -35,8 +47,8 @@ class SentimentPlotter:
     def plot_sentiment_distribution(self, sentiment_scores, title="Sentiment Distribution"):
         fig, ax = plt.subplots(figsize=self.figsize)
 
-        ax.set_facecolor("#121212")
-        fig.patch.set_facecolor("#121212")
+        ax.set_facecolor("#1F1F1F")
+        fig.patch.set_facecolor("#1F1F1F")
 
         if sentiment_scores:
             sns.histplot(sentiment_scores, kde=True, ax=ax, color="#7abaff")

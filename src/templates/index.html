@@ -507,10 +507,11 @@
                 <div class="stock-grid">
                     <div><span class="label">52-Week Low</span><span class="value">$${stock.fifty_two_week_low ?? "N/A"}</span></div>
                     <div><span class="label">52-Week High</span><span class="value">$${stock.fifty_two_week_high ?? "N/A"}</span></div>
-                    <div><span class="label">Volume</span><span class="value">${stock.volume?.toLocaleString() ?? "N/A"}</span></div>
-                    <div><span class="label">Market Cap</span><span class="value">${stock.market_cap?.toLocaleString() ?? "N/A"}</span></div>
+                    <div><span class="label">Volume</span><span class="value">${stock.volume ?? "N/A"}</span></div>
+                    <div><span class="label">Market Cap</span><span class="value">${stock.market_cap ?? "N/A"}</span></div>
                     <div><span class="label">P/E Ratio</span><span class="value">${stock.pe_ratio ?? "N/A"}</span></div>
-                    <div><span class="label">Dividend Yield</span><span class="value">${stock.dividend_yield ?? "N/A"}%</span></div>
+                    <div><span class="label">Dividend Yield</span><span class="value">${stock.dividend_yield ?? "N/A"}</span></div>
+
                 </div>
                 </div>
             `;
@@ -538,15 +539,15 @@
                 postDiv.className = `post ${sentimentClass}`;
 
                 postDiv.innerHTML = `
-                <div class="post-title"><a href="${post.url}" target="_blank">${post.title}</a></div>
-                <div class="post-meta">Posted in r/${post.subreddit} on ${post.created_utc}<br>
-                Score: ${post.score} | Sentiment: ${(post.sentiment * 100).toFixed(1)}%</div>
-                ${post.text ? `
-                    <div class="post-text">
-                    ${post.text}
-                    <a class="read-more" href="${post.url}" target="_blank">Read more →</a>
-                    </div>` : ''
-                }
+                    <div class="post-title"><a href="${post.url}" target="_blank">${post.title}</a></div>
+                    <div class="post-meta">Posted in r/${post.subreddit} on ${post.created_utc}<br>
+                    Score: ${post.score} | Sentiment: ${(post.sentiment * 100).toFixed(1)}%</div>
+                    ${post.text ? `
+                        <div class="post-text">
+                            ${post.text}
+                            <div><a class="read-more" href="${post.url}" target="_blank">Read more →</a></div>
+                        </div>` : ''
+                    }
                 `;
 
                 topPostsContainer.appendChild(postDiv);

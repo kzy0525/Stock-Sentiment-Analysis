@@ -2,6 +2,8 @@ import yfinance as yf
 import time
 import pandas as pd
 
+
+
 def format_large_number(value):
     if value is None:
         return None
@@ -37,9 +39,15 @@ class StockDataFetcher:
 
                 # Try market cap from info
                 try:
-                    market_cap = stock.info.get('marketCap')
+                    info = stock.info
+                    market_cap = info.get('marketCap')
+                    pe_ratio = info.get('trailingPE')
+                    dividend_yield = info.get('dividendYield')
                 except:
                     market_cap = None
+                    pe_ratio = None
+                    dividend_yield = None
+
 
                 return {
                     'success': True,
@@ -50,7 +58,10 @@ class StockDataFetcher:
                         'fifty_two_week_high': round(float(year_high), 2) if year_high else None,
                         'fifty_two_week_low': round(float(year_low), 2) if year_low else None,
                         'volume': format_large_number(last_volume),
-                        'market_cap': format_large_number(market_cap)
+                        'market_cap': format_large_number(market_cap),
+                        'pe_ratio': f"{pe_ratio:.2f}" if pe_ratio else "N/A",
+                        'dividend_yield': f"{dividend_yield:.2f}%" if dividend_yield else "N/A%"
+
                     }
                 }
 
@@ -70,3 +81,5 @@ class StockDataFetcher:
         if hist.empty:
             raise ValueError(f"No stock data found for {stock_symbol}")
         return hist
+
+

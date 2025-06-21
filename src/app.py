@@ -6,6 +6,7 @@ from sentiment import RedditSentimentAnalyzer
 from yahoo_data import StockDataFetcher
 from plots import SentimentPlotter
 import uuid  
+import re
 
 
 # Load environment variables
@@ -22,6 +23,14 @@ sentiment_analyzer = RedditSentimentAnalyzer()
 stock_fetcher = StockDataFetcher()
 plotter = SentimentPlotter()
 
+def remove_links(text):
+    if not text:
+        return ""
+    # Remove Markdown-style links: [text](url)
+    text = re.sub(r'\[([^\]]+)\]\((https?://[^\)]+)\)', r'\1', text)
+    # Remove raw URLs
+    text = re.sub(r'https?://\S+', '', text)
+    return text.strip()
 
 @app.route('/')
 def index():
@@ -36,6 +45,10 @@ def analyze():
         sentiment_data = sentiment_analyzer.analyze_sentiment(stock_symbol)
         print(f"✅ Sentiment data received: {sentiment_data.keys()}")
 
+        for post in sentiment_data.get("top_posts", []):
+            post["body"] = remove_links(post.get("body", ""))
+
+            
         stock_data = stock_fetcher.get_stock_data(stock_symbol)
         print(f"✅ Stock data keys: {stock_data.keys()}")
 
