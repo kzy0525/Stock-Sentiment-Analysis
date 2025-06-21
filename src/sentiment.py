@@ -24,7 +24,7 @@ class RedditSentimentAnalyzer:
         # Remove Reddit-style links
         text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
         # Remove special characters and digits
-        text = re.sub(r'[^\w\s]', '', text)
+        text = re.sub(r'[^\w\s.,:;\'\"-]', '', text)
         return text.strip()
 
     def get_sentiment_score(self, text):
@@ -47,7 +47,7 @@ class RedditSentimentAnalyzer:
                 
                 posts.append({
                     'title': post.title,
-                    'text': post.selftext,
+                    'text': self.clean_text(post.selftext),  
                     'score': post.score,
                     'sentiment': sentiment_score,
                     'created_utc': datetime.fromtimestamp(post.created_utc).strftime('%Y-%m-%d %H:%M:%S'),
@@ -67,6 +67,11 @@ class RedditSentimentAnalyzer:
                 'error': f'No Reddit posts found for {stock_symbol}'
             }
         
+        sentiment_scores = posts_df['sentiment'].tolist()
+        
+        print("🧪 Posts analyzed:", posts_df.shape[0])
+        print("🧠 Sentiment scores:", sentiment_scores)
+        
         avg_sentiment = posts_df['sentiment'].mean()
         
 
@@ -84,7 +89,8 @@ class RedditSentimentAnalyzer:
             'average_sentiment': float(avg_sentiment),
             'post_count': len(posts_df),
             'sentiment_distribution': sentiment_counts,
-            'top_posts': top_posts
+            'top_posts': top_posts, 
+            'sentiment_scores': sentiment_scores 
         } 
     
     

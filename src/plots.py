@@ -31,44 +31,48 @@ class SentimentPlotter:
         # Styling
         ax.set_facecolor("#1F1F1F")
         fig.patch.set_facecolor("#1F1F1F")
-        ax.tick_params(axis='both', colors='white', labelsize=5)
+        ax.tick_params(axis='both', colors='white', labelsize=12)
         ax.spines[['top', 'right']].set_visible(False)
         ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.2, color='white')
         ax.set_title("", color='white')
 
         ax.set_xticklabels([])
-        ax.set_yticklabels([])
         ax.set_title("")
-        ax.set_xlabel("")
-        ax.set_ylabel("")
+        ax.set_xlabel('1 Year Data', color='white', fontsize=14, labelpad=15)
+        ax.set_ylabel('Price (USD)', color='white', fontsize=14, labelpad=15)
 
         return fig
 
     def plot_sentiment_distribution(self, sentiment_scores, title="Sentiment Distribution"):
+        print("📊 Sentiment scores received:", sentiment_scores)
         fig, ax = plt.subplots(figsize=self.figsize)
 
         ax.set_facecolor("#1F1F1F")
         fig.patch.set_facecolor("#1F1F1F")
 
         if sentiment_scores:
-            sns.histplot(sentiment_scores, kde=True, ax=ax, color="#7abaff")
+            sns.histplot(sentiment_scores, kde=True, ax=ax, color="#498659")
         else:
             ax.text(0.5, 0.5, 'No sentiment data available',
                     ha='center', va='center', color='white', fontsize=14)
 
-        ax.set_title(title, color='white')
-        ax.set_xlabel('Sentiment Score', color='white')
-        ax.set_ylabel('Frequency', color='white')
-        ax.tick_params(axis='both', colors='white')
+        ax.tick_params(axis='both', colors='white', labelsize=12)  # larger ticks
+        ax.spines[['top', 'right']].set_visible(False)
+        ax.grid(True, linestyle='--', linewidth=0.8, alpha=0.2, color='white')
 
+        ax.set_title("", color='white')
+        ax.set_xlabel('Sentiment Score', color='white', fontsize=14, labelpad=15)
+        ax.set_ylabel('Score Frequency', color='white', fontsize=14, labelpad=15)
+
+        
         return fig
 
     def save_plot(self, fig, relative_path):
         # Save plots relative to the src/ directory where this file lives
-        base_dir = os.path.dirname(os.path.abspath(__file__))  # points to src/
+        base_dir = os.path.dirname(os.path.abspath(__file__))
         full_path = os.path.join(base_dir, '..', relative_path)
 
         os.makedirs(os.path.dirname(full_path), exist_ok=True)
         fig.savefig(full_path, bbox_inches='tight')
-        print(f"✅ Plot saved to {full_path}")
+        print(f"Plot saved to {full_path}")
         plt.close(fig)

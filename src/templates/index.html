@@ -99,8 +99,7 @@
       padding: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       width: 350px;
-      height: 660px;
-      margin: 0;
+      height: 690px;
       padding: 20px;
     }
 
@@ -108,7 +107,7 @@
         text-align: center;
         font-size: 30px;
         font-weight: bold;
-        color: #28733B;  /* Feel free to change to #ffffff or another tone */
+        color: #28733B;
         margin-top: 15px;
         margin-bottom: 15px;
     }
@@ -118,7 +117,7 @@
         font-size: 30px;
         font-weight: bold;
         color: #28733B;  /* Feel free to change to #ffffff or another tone */
-        margin-top: 65px;
+        margin-top: 80px;
         margin-bottom: 15px;
     }
 
@@ -244,7 +243,7 @@
     }
 
     .chart-placeholder {
-        height: 300px;
+        height: 315px;
         width: 300px;
         background: #1F1F1F;
         border-radius: 25px;
@@ -311,8 +310,8 @@
     }
     .post-text {
         display: -webkit-box;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -348,8 +347,6 @@
     <form id="stockForm" autocomplete="off">
         <div class="search-box">
         <img class="search-icon" src="{{ url_for('static', filename='Vector.png') }}" alt="Search Icon">
-
-
         <input
             type="text"
             id="stockSymbol"

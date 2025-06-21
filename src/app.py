@@ -40,17 +40,17 @@ def index():
 def analyze():
     try:
         stock_symbol = request.form.get('stock_symbol', '').upper()
-        print(f"📈 Received symbol: {stock_symbol}")
+        print(f"Received symbol: {stock_symbol}")
 
         sentiment_data = sentiment_analyzer.analyze_sentiment(stock_symbol)
-        print(f"✅ Sentiment data received: {sentiment_data.keys()}")
+        print(f"Sentiment data received: {sentiment_data.keys()}")
 
         for post in sentiment_data.get("top_posts", []):
             post["body"] = remove_links(post.get("body", ""))
 
             
         stock_data = stock_fetcher.get_stock_data(stock_symbol)
-        print(f"✅ Stock data keys: {stock_data.keys()}")
+        print(f"Stock data keys: {stock_data.keys()}")
 
         # Step 1: Generate plot figures
         sentiment_fig = plotter.plot_sentiment_distribution(sentiment_data.get("sentiment_scores", []))
@@ -75,7 +75,7 @@ def analyze():
             'stock_plot': '/' + relative_stock_path
         })
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         return jsonify({'error': str(e)}), 500
 
 
