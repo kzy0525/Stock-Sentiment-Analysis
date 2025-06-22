@@ -75,8 +75,6 @@
         background-color: #3a3a3a;
     }
 
-
-
     input[type="text"] {
       padding: 10px;
       width: 100%;
@@ -107,7 +105,7 @@
         text-align: center;
         font-size: 30px;
         font-weight: bold;
-        color: #28733B;
+        color: white;
         margin-top: 25x;
         margin-bottom: 15px;
     }
@@ -116,7 +114,7 @@
         text-align: center;
         font-size: 30px;
         font-weight: bold;
-        color: #28733B;  /* Feel free to change to #ffffff or another tone */
+        color: white;  /* Feel free to change to #ffffff or another tone */
         margin-top: 80px;
         margin-bottom: 15px;
     }
@@ -172,7 +170,7 @@
 
 
     .card h3 {
-      color: #7aff9c;
+      color: white;
       margin-bottom: 10px;
     }
 
@@ -206,7 +204,7 @@
 
     .bar-label {
         font-weight: semi-bold;
-        font-size: 15px;
+        font-size: 18px;
         white-space: nowrap;
     }
 
@@ -294,7 +292,7 @@
 
     .post-title a:hover {
         text-decoration: underline;  
-        color: #6D6D6D;              
+        color: white;              
     }
 
     .post-meta {
@@ -371,10 +369,8 @@
     <div class="right-panel">
         <div class="charts-column">
             <div class="card chart-placeholder" id="plot-sentiment-trend">
-            📈 Sentiment Trend Over Time
             </div>
             <div class="card chart-placeholder" id="plot-volume-dist">
-            📊 Volume / Sentiment Distribution
             </div>
         </div>
 
@@ -551,7 +547,7 @@
             });
         } 
         else {
-          topPostsContainer.innerHTML = '<p style="color: #aaa;">No top Reddit posts found.</p>';
+        //   topPostsContainer.innerHTML = '<p style="color: #aaa;">No top Reddit posts found.</p>';
         }
 
       } catch (error) {

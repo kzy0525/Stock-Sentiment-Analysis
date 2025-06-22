@@ -59,7 +59,11 @@ def analyze():
         print(f"Stock data keys: {stock_data.keys()}")
 
         # Step 1: Generate plot figures
-        sentiment_fig = plotter.plot_sentiment_distribution(sentiment_data.get("sentiment_scores", []))
+        sentiment_scores = sentiment_data.get("sentiment_scores", [])
+        average_sentiment = sentiment_data.get("average_sentiment", 0)
+
+        sentiment_fig = plotter.plot_sentiment_distribution(sentiment_scores, average_sentiment)
+
         stock_df = stock_fetcher.get_stock_dataframe(stock_symbol, period="1y", interval="1d")
         stock_fig = plotter.plot_stock_price(stock_df)
 
