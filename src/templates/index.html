@@ -28,6 +28,10 @@
         align-items: center;
         /* box-shadow: inset 0 0 0 2px #2c2c2c; */
     }
+    .search-box.dropdown-active {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 
     .search-icon {
         color: #555;
@@ -50,11 +54,12 @@
     #stockSymbol::placeholder {
     color: #555;
     }
-
+    
     .autocomplete-list {
         position: absolute;
         background-color: #2a2a2a;
         color: #fff;
+        max-width: 1430px;
         width: 100%;
         border-radius: 0 0 10px 10px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -106,7 +111,7 @@
         font-size: 30px;
         font-weight: bold;
         color: white;
-        margin-top: 25x;
+        margin-top: 25px;
         margin-bottom: 15px;
     }
 
@@ -341,22 +346,22 @@
 </head>
 <body>
 
-  <div class="search-container">
+    <div class="search-container">
     <form id="stockForm" autocomplete="off">
+        <div class="search-wrapper">
         <div class="search-box">
-        <img class="search-icon" src="{{ url_for('static', filename='assets/Vector.png') }}" alt="Search Icon">
-        <input
+            <img class="search-icon" src="{{ url_for('static', filename='assets/Vector.png') }}" alt="Search Icon">
+            <input
             type="text"
             id="stockSymbol"
             placeholder="Search for Stock Name or Ticker"
             required
-        />
+            />
         </div>
         <div id="autocomplete-list" class="autocomplete-list"></div>
+        </div>
     </form>
     </div>
-
-
 
   <div id="results" class="dashboard">
 
@@ -385,39 +390,71 @@
     const autocompleteList = document.getElementById('autocomplete-list');
 
     input.addEventListener('input', async () => {
-      const query = input.value.trim();
-      if (!query) {
-        autocompleteList.innerHTML = '';
-        return;
-      }
+        const query = input.value.trim();
 
-      try {
-        const res = await fetch(`/tickers?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        autocompleteList.innerHTML = '';
+        try {
+            const res = await fetch(`/tickers?q=${encodeURIComponent(query)}`);
+            const data = await res.json();
 
-        data.forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'autocomplete-item';
-          div.textContent = `${item.Symbol} - ${item.Name}`;
-          div.addEventListener('click', () => {
-            input.value = `${item.Symbol} - ${item.Name}`;
             autocompleteList.innerHTML = '';
-            document.getElementById('stockForm').requestSubmit(); 
+
+            // ✅ Move the class toggle HERE, after data is defined
+            if (data.length > 0) {
+            document.querySelector('.search-box').classList.add('dropdown-active');
+            } else {
+            document.querySelector('.search-box').classList.remove('dropdown-active');
+            }
+
+            data.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'autocomplete-item';
+            div.textContent = `${item.Symbol} - ${item.Name}`;
+            div.addEventListener('click', () => {
+                input.value = `${item.Symbol} - ${item.Name}`;
+                autocompleteList.innerHTML = '';
+                document.querySelector('.search-box').classList.remove('dropdown-active');
+                document.getElementById('stockForm').requestSubmit();
+            });
+            autocompleteList.appendChild(div);
+            });
+        } catch (err) {
+            console.error('Autocomplete error:', err);
+            autocompleteList.innerHTML = '';
+            document.querySelector('.search-box').classList.remove('dropdown-active');
+        }
         });
-          autocompleteList.appendChild(div);
-        });
-      } catch (err) {
-        console.error('Autocomplete error:', err);
-        autocompleteList.innerHTML = '';
-      }
-    });
+
+
+
+    //   try {
+    //     const res = await fetch(`/tickers?q=${encodeURIComponent(query)}`);
+    //     const data = await res.json();
+    //     autocompleteList.innerHTML = '';
+
+    //     data.forEach(item => {
+    //       const div = document.createElement('div');
+    //       div.className = 'autocomplete-item';
+    //       div.textContent = `${item.Symbol} - ${item.Name}`;
+    //       div.addEventListener('click', () => {
+    //         input.value = `${item.Symbol} - ${item.Name}`;
+    //         autocompleteList.innerHTML = '';
+    //         document.getElementById('stockForm').requestSubmit(); 
+    //     });
+    //       autocompleteList.appendChild(div);
+    //     });
+    //   } catch (err) {
+    //     console.error('Autocomplete error:', err);
+    //     autocompleteList.innerHTML = '';
+    //   }
+    // });
 
     document.addEventListener('click', (e) => {
-      if (!autocompleteList.contains(e.target) && e.target !== input) {
-        autocompleteList.innerHTML = '';
-      }
+        if (!autocompleteList.contains(e.target) && e.target !== input) {
+            autocompleteList.innerHTML = '';
+            document.querySelector('.search-box').classList.remove('dropdown-active');
+        }
     });
+
 
     document.getElementById('stockForm').addEventListener('submit', async (e) => {
       e.preventDefault();
