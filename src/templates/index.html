@@ -26,7 +26,6 @@
         padding: 10px 20px;
         display: flex;
         align-items: center;
-        /* box-shadow: inset 0 0 0 2px #2c2c2c; */
     }
     .search-box.dropdown-active {
         border-bottom-left-radius: 0;
@@ -36,7 +35,7 @@
     .search-icon {
         color: #555;
         margin-right: 10px;
-        width: 24px;     /* Adjust size as needed */
+        width: 24px;    
         height: 24px;
 
     }
@@ -119,7 +118,7 @@
         text-align: center;
         font-size: 30px;
         font-weight: bold;
-        color: white;  /* Feel free to change to #ffffff or another tone */
+        color: white; 
         margin-top: 80px;
         margin-bottom: 15px;
     }
@@ -265,13 +264,13 @@
         flex: 1;
     }
     .post a {
-        color: inherit;           /* Inherits color from the surrounding .post-title */
-        text-decoration: none;    /* Removes underline */
+        color: inherit;
+        text-decoration: none;   
     }
 
     .post a:hover {
-        color: #7abaff;           /* Optional: light blue on hover */
-        text-decoration: underline;  /* Optional: underline on hover only */
+        color: #7abaff;           
+        text-decoration: underline; 
     }
 
     .post {
@@ -367,7 +366,6 @@
 
     <!-- Left Panel -->
     <div id="left-panel" class="card">
-      <!-- Sentiment & Stock data will be injected here -->
     </div>
     
     <!-- Right Panel -->
@@ -380,7 +378,6 @@
         </div>
 
         <div class="posts-column" id="top-posts">
-            <!-- Reddit posts will be inserted here -->
         </div>
     </div>
 
@@ -398,7 +395,6 @@
 
             autocompleteList.innerHTML = '';
 
-            // ✅ Move the class toggle HERE, after data is defined
             if (data.length > 0) {
             document.querySelector('.search-box').classList.add('dropdown-active');
             } else {
@@ -523,8 +519,6 @@
           html += `<p class="error">${data.sentiment.error}</p>`;
         }
 
-        // Stock Data section
-
         if (data.stock_data.success) {
             const stock = data.stock_data.data;
 
@@ -559,8 +553,6 @@
         document.getElementById('plot-volume-dist').innerHTML = `
             <img src='${data.sentiment_plot}' style='width: 100%; height: 100%; border-radius: 20px;' alt="Sentiment Distribution">
         `;
-
-        // Top Reddit Posts
 
         if (data.sentiment.top_posts && data.sentiment.top_posts.length > 0) {
             data.sentiment.top_posts.forEach(post => {
