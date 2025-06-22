@@ -56,14 +56,13 @@ class EnhancedSentimentAnalyzer:
         has_question = 1 if '?' in text else 0
         has_exclamation = 1 if '!' in text else 0
         
-   
+        # additional features for sentiment
         sentiment_score = (
             vader_sentiment['compound'] * 0.7 +  
             (text_length / 1000) * 0.1 +  
             (has_question * -0.1) +  
             (has_exclamation * 0.1)  
         )
-        
         return sentiment_score  
     
     def analyze_trend(self, posts_df, window_size=7):
@@ -78,14 +77,9 @@ class EnhancedSentimentAnalyzer:
             
         posts_df['date'] = pd.to_datetime(posts_df['created_utc'])
         posts_df.set_index('date', inplace=True)
-        
-
         daily_sentiment = posts_df['sentiment'].resample('D').mean()
-        
-       
         moving_avg = daily_sentiment.rolling(window=window_size).mean()
         
-    
         trend = 'Neutral'
         if len(moving_avg) > 0:
             if moving_avg.iloc[-1] > 0.2:

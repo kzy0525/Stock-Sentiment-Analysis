@@ -14,6 +14,7 @@ class SentimentPlotter:
         plt.style.use('seaborn-v0_8-darkgrid')
         self.figsize = (14, 14)
 
+    # plots the stock price chart for the given stock data
     def plot_stock_price(self, stock_data, title="Stock Price Chart"):
         fig, ax = plt.subplots(figsize=self.figsize)
 
@@ -51,6 +52,7 @@ class SentimentPlotter:
 
         return fig
 
+    #plots the sentiment distribution of the posts
     def plot_sentiment_distribution(self, sentiment_scores, average_sentiment=0, title="Sentiment Distribution"):
         print("📊 Sentiment scores received:", sentiment_scores)
         fig, ax = plt.subplots(figsize=self.figsize)
@@ -63,7 +65,7 @@ class SentimentPlotter:
             sns.histplot(sentiment_scores, kde=True, ax=ax, color=color)
             for line in ax.lines:
                 if isinstance(line, mlines.Line2D):
-                    line.set_linewidth(5)
+                    line.set_linewidth(4)
         else:
             ax.text(0.5, 0.5, 'No sentiment data available',
                     ha='center', va='center', color='white', fontsize=14)
@@ -82,8 +84,8 @@ class SentimentPlotter:
         fig.subplots_adjust(top=0.80) 
         return fig
 
+    # saves the plots to static/plots folder to acess in the flask app
     def save_plot(self, fig, relative_path):
-        # Save plots relative to the src/ directory where this file lives
         base_dir = os.path.dirname(os.path.abspath(__file__))
         full_path = os.path.join(base_dir, '..', relative_path)
 

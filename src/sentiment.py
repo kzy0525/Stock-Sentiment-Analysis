@@ -19,11 +19,8 @@ class RedditSentimentAnalyzer:
     def clean_text(self, text):
         if not isinstance(text, str):
             return ""
-        # Remove URLs
         text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-        # Remove Reddit-style links
         text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
-        # Remove special characters and digits
         text = re.sub(r'[^\w\s.,:;\'\"-]', '', text)
         return text.strip()
 
@@ -66,22 +63,18 @@ class RedditSentimentAnalyzer:
                 'success': False,
                 'error': f'No Reddit posts found for {stock_symbol}'
             }
-        
         sentiment_scores = posts_df['sentiment'].tolist()
         
-        print("🧪 Posts analyzed:", posts_df.shape[0])
-        print("🧠 Sentiment scores:", sentiment_scores)
+        print("Posts analyzed:", posts_df.shape[0])
+        print("Sentiment scores:", sentiment_scores)
         
         avg_sentiment = posts_df['sentiment'].mean()
         
-
         posts_df['sentiment_category'] = posts_df['sentiment'].apply(
             lambda x: 'positive' if x > 0 else ('negative' if x < 0 else 'neutral')
         )
         
         sentiment_counts = posts_df['sentiment_category'].value_counts().to_dict()
-        
-
         top_posts = posts_df.nlargest(4, 'score').to_dict('records')
         
         return {

@@ -25,15 +25,15 @@ sentiment_analyzer = RedditSentimentAnalyzer()
 stock_fetcher = StockDataFetcher()
 plotter = SentimentPlotter()
 
+# function to remove links from text
 def remove_links(text):
     if not text:
         return ""
-    # Remove Markdown-style links: [text](url)
     text = re.sub(r'\[([^\]]+)\]\((https?://[^\)]+)\)', r'\1', text)
-    # Remove raw URLs
     text = re.sub(r'https?://\S+', '', text)
     return text.strip()
 
+# render front end by looking for index.html in templates folder
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -45,25 +45,28 @@ def analyze():
         for file in glob.glob(os.path.join(plot_folder, '*.png')):
             os.remove(file)
 
-        stock_symbol = request.form.get('stock_symbol', '').upper()
-        print(f"Received symbol: {stock_symbol}")
+        # Extract just the ticker
+        stock_symbol = request.form.get('stock_symbol', '').split(" - ")[0].strip().upper()
 
+        # Get company name from CSV
+        company_name = ticker_df[ticker_df['Symbol'].str.upper() == stock_symbol]['Name'].values
+        company_name = company_name[0] if len(company_name) > 0 else 'Unknown Company'
+        full_label = f"{stock_symbol} - {company_name}"
+
+        print(f"Received symbol: {stock_symbol}")
         sentiment_data = sentiment_analyzer.analyze_sentiment(stock_symbol)
         print(f"Sentiment data received: {sentiment_data.keys()}")
 
         for post in sentiment_data.get("top_posts", []):
             post["body"] = remove_links(post.get("body", ""))
 
-            
         stock_data = stock_fetcher.get_stock_data(stock_symbol)
         print(f"Stock data keys: {stock_data.keys()}")
 
         # Step 1: Generate plot figures
         sentiment_scores = sentiment_data.get("sentiment_scores", [])
         average_sentiment = sentiment_data.get("average_sentiment", 0)
-
         sentiment_fig = plotter.plot_sentiment_distribution(sentiment_scores, average_sentiment)
-
         stock_df = stock_fetcher.get_stock_dataframe(stock_symbol, period="1y", interval="1d")
         stock_fig = plotter.plot_stock_price(stock_df)
 
@@ -82,7 +85,8 @@ def analyze():
             'sentiment': sentiment_data,
             'stock_data': stock_data,
             'sentiment_plot': '/' + relative_sentiment_path,
-            'stock_plot': '/' + relative_stock_path
+            'stock_plot': '/' + relative_stock_path, 
+            'stock_label': full_label
         })
     except Exception as e:
         print(f"Error: {e}")
